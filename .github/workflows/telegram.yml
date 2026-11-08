@@ -37,7 +37,11 @@ jobs:
           if [ -s "$F" ]; then
             echo "id=$(cat $F)" >> "$GITHUB_OUTPUT"; exit 0
           fi
-          ID=$(curl -s "https://api.telegram.org/bot${TOKEN}/getUpdates" | jq -r '[.result[] | (.message // .my_chat_member // .edited_message) | .chat.id] | map(select(. != null)) | last // empty')
+          R=$(curl -s "https://api.telegram.org/bot${TOKEN}/getUpdates")
+          echo "getUpdates ok=$(echo "$R" | jq -r .ok) desc=$(echo "$R" | jq -r '.description // "-"') updates=$(echo "$R" | jq -r '.result | length? // 0')"
+          ME=$(curl -s "https://api.telegram.org/bot${TOKEN}/getMe" | jq -r '.result.username // .description')
+          echo "bot=$ME"
+          ID=$(echo "$R" | jq -r '[.result[] | (.message // .my_chat_member // .edited_message) | .chat.id] | map(select(. != null)) | last // empty')
           if [ -z "$ID" ]; then echo "No chat found: send any message to the bot first"; exit 1; fi
           echo "$ID" > "$F"
           git config user.name "github-actions[bot]"
