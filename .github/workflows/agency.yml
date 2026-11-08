@@ -1,0 +1,30 @@
+name: Agency hourly report to Telegram
+
+on:
+  workflow_dispatch:
+    inputs:
+      enc:
+        description: 'Encrypted message (internal)'
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Decrypt and send
+        env:
+          TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          KEY: ${{ secrets.REPORT_KEY }}
+        run: |
+          TOKEN=$(printf '%s' "$TOKEN" | tr -d '[:space:]'); KEY=$(printf '%s' "$KEY" | tr -d '[:space:]')
+          if [ -z "$KEY" ]; then echo "REPORT_KEY secret missing"; exit 1; fi
+          CHAT=$(cat .github/telegram_chat_id)
+          jq -r '.inputs.enc' "$GITHUB_EVENT_PATH" | openssl enc -d -aes-256-cbc -pbkdf2 -iter 100000 -a -A -pass "pass:$KEY" > msg.txt
+          curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${CHAT}" --data-urlencode "text@msg.txt" \
+            -d disable_web_page_preview=true | jq -e '.ok' > /dev/null
+          rm -f msg.txt

@@ -1,0 +1,130 @@
+<title>تقرير الوكالة اللحظي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">
+<style>
+/* Layout: internal agency snapshot — KPI strip, hourly spend line, alerts, client table, platforms, top campaigns, full ledger */
+/* Direction: 101 dark — charcoal ground, teal accent, ivory type (same family as client reports) */
+:root{
+  --bg:#0D0E11;--surface:#15171C;--sunk:#1D2027;--ink:#EEE8DC;--muted:#A39D90;--line:#2A2D35;
+  --accent:#2CC2BB;--accent-hi:#6FE0D9;--brand-teal:#079B96;--brand-orange:#FEA727;
+  --meta:#7C9DEB;--snap:#F2D74A;--tt:#EE6F9B;
+  --good:#6FCF9C;--good-bg:#16302A;--warn:#E6B562;--warn-bg:#352A16;--bad:#F08178;--bad-bg:#3A1D1B;
+  --f-display:"El Messiri","Segoe UI",Tahoma,sans-serif;--f-body:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 500px at 85% -10%,rgba(44,194,187,.10),transparent 60%),var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
+.num{font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate}
+h1,h2{font-family:var(--f-display);margin:0;font-weight:600}
+.wrap{max-width:1150px;margin:0 auto;padding-inline:max(16px,env(safe-area-inset-left,0px))}
+header{background:linear-gradient(180deg,#17191F,#121419);border-bottom:1px solid var(--line);box-shadow:inset 0 -1px 0 rgba(44,194,187,.35)}
+header .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px;padding-block:20px 16px}
+.eyebrow{font-size:12px;color:var(--muted);letter-spacing:.05em}
+header h1{font-size:23px}
+.stamp{font-size:12.5px;color:var(--muted)}
+.mark{display:inline-flex;gap:3px;align-items:center;margin-inline-end:6px}.mark i{width:6px;height:14px;border-radius:3px;background:var(--brand-teal)}.mark b{width:9px;height:9px;border-radius:50%;background:var(--brand-orange)}
+main .wrap{display:flex;flex-direction:column;gap:18px;padding-block:20px 40px}
+.panel,.kpis{background:linear-gradient(180deg,#17191F,#14161B);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.panel{padding:16px;min-width:0}
+.panel-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.panel-h h2{font-size:15px;position:relative;padding-inline-start:12px}
+.panel-h h2::before{content:"";position:absolute;inset-inline-start:0;top:.35em;bottom:.35em;width:3px;border-radius:2px;background:var(--accent)}
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
+.kpi{padding:14px 16px;border-inline-start:1px solid var(--line);min-width:0}.kpi:first-child{border-inline-start:0}
+.kpi .lbl{font-size:12px;color:var(--muted);letter-spacing:.04em}
+.kpi .val{font-family:var(--f-display);font-size:24px;font-weight:600;white-space:nowrap}
+.kpi .sub{font-size:12px;color:var(--muted)}
+.kpi.hero .val{color:var(--accent-hi)}
+@media (max-width:760px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.kpi{border-inline-start:0;border-top:1px solid var(--line)}.kpi:nth-child(-n+2){border-top:0}.kpi:nth-child(even){border-inline-start:1px solid var(--line)}.kpi:last-child{grid-column:1/-1}.kpi .val{font-size:20px}}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:18px}
+@media (max-width:860px){.grid2{grid-template-columns:minmax(0,1fr)}}
+.chart{display:block;width:100%}.chart text{fill:var(--muted);font-size:11px;font-family:var(--f-body)}
+.alerts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.alerts li{padding:10px 12px;border-radius:9px;background:var(--warn-bg);color:var(--warn);font-size:13.5px;line-height:1.6}
+.ok{padding:10px 12px;border-radius:9px;background:var(--good-bg);color:var(--good);font-size:13.5px;margin:0}
+.tbl-wrap{overflow-x:auto;margin-inline:-16px;padding-inline:16px}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:680px}
+th{font-size:12px;color:var(--muted);font-weight:500;text-align:start;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap;cursor:pointer}
+td{padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td.name{white-space:normal;font-weight:600;min-width:180px}
+tfoot td{font-weight:600;color:var(--accent-hi);border-bottom:0}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-inline-end:6px}
+.bar{height:6px;border-radius:3px;background:var(--sunk);overflow:hidden;margin-top:4px;min-width:60px}.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-hi))}
+.pill{display:inline-block;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--sunk);color:var(--muted)}.pill.good{background:var(--good-bg);color:var(--good)}
+.up{color:var(--good)}.down{color:var(--bad)}.muted{color:var(--muted)}
+.pcards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.pcards{grid-template-columns:minmax(0,1fr)}}
+.pcard{border:1px solid var(--line);border-top:3px solid var(--pc);border-radius:10px;padding:12px 14px;background:#121419}
+.pcard dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 12px;margin:8px 0 0}.pcard dt{font-size:11.5px;color:var(--muted)}.pcard dd{margin:0;font-weight:600}
+.chips{display:flex;gap:4px;flex-wrap:wrap;background:#101216;border:1px solid var(--line);padding:3px;border-radius:9px}
+.chips button{border:0;background:transparent;color:var(--muted);padding:5px 10px;border-radius:7px;font:inherit;font-size:12.5px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--sunk);color:var(--accent-hi);box-shadow:inset 0 0 0 1px rgba(44,194,187,.45)}
+.note{font-size:12.5px;color:var(--muted);margin:0}
+</style>
+<div dir="rtl" lang="ar">
+<header><div class="wrap">
+  <div><div class="eyebrow">داخلي · 101 Agency · كل المنصات وكل العملاء</div><h1>تقرير الوكالة اللحظي</h1></div>
+  <div class="stamp"><span class="mark" aria-hidden="true"><i></i><b></b><i></i></span><span id="stamp"></span></div>
+</div></header>
+<main><div class="wrap">
+  <section class="kpis" id="kpis"></section>
+  <div class="grid2">
+    <section class="panel"><div class="panel-h"><h2>الصرف التراكمي اليوم ساعة بساعة</h2><span class="stamp">بتوقيت الرياض</span></div><div id="hist" dir="ltr"></div></section>
+    <section class="panel"><div class="panel-h"><h2>تنبيهات</h2></div><div id="alerts"></div></section>
+  </div>
+  <section class="panel"><div class="panel-h"><h2>حسب العميل</h2><span class="stamp">اليوم حتى الآن مقابل أمس كامل</span></div>
+    <div class="tbl-wrap"><table><thead><tr><th>العميل</th><th>الصرف</th><th>من الإجمالي</th><th>العملاء</th><th>تكلفة العميل</th><th>صرف أمس</th><th>عملاء أمس</th><th>تكلفة أمس</th><th>حملات نشطة</th></tr></thead><tbody id="clients"></tbody><tfoot id="clientsFoot"></tfoot></table></div>
+  </section>
+  <section class="panel"><div class="panel-h"><h2>حسب المنصة</h2></div><div class="pcards" id="pcards"></div></section>
+  <section class="panel"><div class="panel-h"><h2>كل الحملات اللي صرفت النهارده</h2><div class="chips" id="filter"></div></div>
+    <div class="tbl-wrap"><table><thead><tr><th>#</th><th>الحملة</th><th>العميل</th><th>المنصة</th><th>الحساب</th><th>الصرف</th><th>العملاء</th><th>تكلفة العميل</th><th>الظهور</th><th>النقرات</th><th>نسبة النقر</th></tr></thead><tbody id="camps"></tbody></table></div>
+  </section>
+  <p class="note">المصدر: نفس حسابات لوحة إعلانات 101 (Windsor.ai). كل المبالغ بالريال السعودي (USD 3.75 · AED 1.021 · EGP 0.0667). العملاء المحتملون = نماذج + محادثات بدون تكرار. أي حملة اسمها فيه mayan بتتحسب على مكيون. أرقام المنصات قد تتأخر حتى ساعة.</p>
+</div></main>
+</div>
+<!--DATA-START-->
+<script type="application/json" id="data">__DATA__</script>
+<!--DATA-END-->
+<script>
+(function(){
+const D=JSON.parse(document.getElementById("data").textContent);
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const PL={meta:["Meta","var(--meta)"],snap:["Snapchat","var(--snap)"],tt:["TikTok","var(--tt)"]};
+const nf0=new Intl.NumberFormat("en-US",{maximumFractionDigits:0}),nf2=new Intl.NumberFormat("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const M=v=>'<span class="num">'+(v>=100?nf0.format(v):nf2.format(v))+'</span> ر.س';
+const N=v=>'<span class="num">'+nf0.format(v)+'</span>';
+const cpl=(s,l)=>l?M(s/l):'<span class="muted">—</span>';
+const R=D.rows,sum=a=>a.reduce((t,r)=>({s:t.s+r.s,l:t.l+r.l,i:t.i+r.i,c:t.c+r.c,n:t.n+1}),{s:0,l:0,i:0,c:0,n:0});
+const T=sum(R),Y=D.yday.tot;
+$("#stamp").textContent="آخر تحديث: "+new Date(D.updated).toLocaleString("ar-SA-u-nu-latn",{weekday:"long",day:"numeric",month:"long",hour:"2-digit",minute:"2-digit",timeZone:"Asia/Riyadh"});
+const lh=D.lastHour;
+const k=(c,l,v,s)=>'<div class="kpi '+c+'"><div class="lbl">'+l+'</div><div class="val">'+v+'</div><div class="sub">'+s+'</div></div>';
+$("#kpis").innerHTML=k("hero","الصرف اليوم",M(T.s),Y.s?"أمس كامل: "+M(Y.s):"")+k("hero","العملاء المحتملون",N(T.l),Y.s?"أمس كامل: "+N(Y.l):"")+k("","تكلفة العميل",cpl(T.s,T.l),Y.l?"أمس: "+cpl(Y.s,Y.l):"")+k("","آخر ساعة",lh?"+"+M(lh.s):"—",lh?"+"+N(lh.l)+" عميل منذ "+lh.since:"أول قراءة اليوم")+k("","حملات صرفت",N(T.n),N(new Set(R.map(r=>r.client)).size)+" عميل");
+/* hourly chart */
+(function(){const el=$("#hist"),h=D.hist||[];if(h.length<2){el.innerHTML='<p class="note">الرسم بيكتمل مع كل تحديث خلال اليوم (قراءة '+h.length+' حتى الآن).</p>';return}
+ const W=Math.max(300,el.clientWidth||560),H=200,pl=48,pr=36,pt=14,pb=24,iw=W-pl-pr,ih=H-pt-pb;
+ const ms=Math.max(1,...h.map(x=>x[1]))*1.08,ml=Math.max(1,...h.map(x=>x[2]))*1.08,n=h.length,x=i=>pl+i*iw/(n-1);let g="";
+ for(let i=0;i<=4;i++){const y=pt+ih-ih*i/4;g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+y+'" y2="'+y+'" stroke="var(--line)"/><text x="'+(pl-6)+'" y="'+(y+4)+'" text-anchor="end">'+nf0.format(ms*i/4)+'</text><text x="'+(W-pr+6)+'" y="'+(y+4)+'">'+nf0.format(ml*i/4)+'</text>'}
+ const step=Math.ceil(n/8);h.forEach((p,i)=>{if(i%step===0||i===n-1)g+='<text x="'+x(i)+'" y="'+(H-6)+'" text-anchor="middle">'+p[0]+'</text>'});
+ const ps=h.map((p,i)=>x(i).toFixed(1)+","+(pt+ih-ih*p[1]/ms).toFixed(1)).join(" "),pl2=h.map((p,i)=>x(i).toFixed(1)+","+(pt+ih-ih*p[2]/ml).toFixed(1)).join(" ");
+ g+='<polygon points="'+ps+" "+x(n-1)+","+(pt+ih)+" "+pl+","+(pt+ih)+'" fill="rgba(44,194,187,.15)"/><polyline points="'+ps+'" fill="none" stroke="var(--accent-hi)" stroke-width="2"/><polyline points="'+pl2+'" fill="none" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="4 3"/>';
+ el.innerHTML='<svg class="chart" viewBox="0 0 '+W+" "+H+'" role="img" aria-label="الصرف والعملاء التراكمي">'+g+'</svg><p class="note" style="margin-top:6px"><span style="color:var(--accent-hi)">━</span> الصرف (يسار) · <span>┅</span> العملاء (يمين)</p>'})();
+$("#alerts").innerHTML=D.alerts&&D.alerts.length?'<ul class="alerts">'+D.alerts.map(a=>"<li>"+esc(a)+"</li>").join("")+"</ul>":'<p class="ok">مفيش تنبيهات دلوقتي — كل الحملات ماشية طبيعي.</p>';
+/* clients */
+const by={};R.forEach(r=>{(by[r.client]=by[r.client]||[]).push(r)});
+const yc=D.yday.byClient||{},names=[...new Set(Object.keys(by).concat(Object.keys(yc)))];
+const rows=names.map(c=>({c,t:sum(by[c]||[]),y:yc[c]||{s:0,l:0}})).sort((a,b)=>b.t.s-a.t.s||b.y.s-a.y.s);
+$("#clients").innerHTML=rows.map(o=>'<tr><td class="name">'+esc(o.c)+'</td><td>'+(o.t.s?M(o.t.s):'<span class="muted">—</span>')+'</td><td>'+(T.s?'<span class="num">'+nf0.format(o.t.s/T.s*100)+'%</span><div class="bar"><span style="width:'+(o.t.s/T.s*100).toFixed(1)+'%"></span></div>':"")+'</td><td>'+N(o.t.l)+'</td><td>'+cpl(o.t.s,o.t.l)+'</td><td>'+(o.y.s?M(o.y.s):"—")+'</td><td>'+N(o.y.l)+'</td><td>'+cpl(o.y.s,o.y.l)+'</td><td>'+N(o.t.n)+'</td></tr>').join("");
+$("#clientsFoot").innerHTML='<tr><td>الإجمالي</td><td>'+M(T.s)+'</td><td></td><td>'+N(T.l)+'</td><td>'+cpl(T.s,T.l)+'</td><td>'+M(Y.s)+'</td><td>'+N(Y.l)+'</td><td>'+cpl(Y.s,Y.l)+'</td><td>'+N(T.n)+'</td></tr>';
+/* platforms */
+$("#pcards").innerHTML=Object.keys(PL).map(p=>{const s=sum(R.filter(r=>r.p===p));return'<div class="pcard" style="--pc:'+PL[p][1]+'"><b><span class="dot" style="background:'+PL[p][1]+'"></span>'+PL[p][0]+'</b><dl><div><dt>الصرف</dt><dd>'+M(s.s)+'</dd></div><div><dt>من الإجمالي</dt><dd><span class="num">'+(T.s?nf0.format(s.s/T.s*100):0)+'%</span></dd></div><div><dt>العملاء</dt><dd>'+N(s.l)+'</dd></div><div><dt>تكلفة العميل</dt><dd>'+cpl(s.s,s.l)+'</dd></div><div><dt>النقرات</dt><dd>'+N(s.c)+'</dd></div><div><dt>نسبة النقر</dt><dd><span class="num">'+(s.i?nf2.format(s.c/s.i*100):"0")+'%</span></dd></div></dl></div>'}).join("");
+/* campaigns */
+let flt="all";const clientsList=Object.keys(by).sort((a,b)=>sum(by[b]).s-sum(by[a]).s);
+function drawCamps(){$("#filter").innerHTML=['all'].concat(clientsList).map(c=>'<button type="button" data-c="'+esc(c)+'" aria-pressed="'+(c===flt)+'">'+(c==="all"?"الكل":esc(c))+'</button>').join("");
+ const list=R.filter(r=>flt==="all"||r.client===flt).sort((a,b)=>b.s-a.s);
+ $("#camps").innerHTML=list.map((r,i)=>'<tr><td class="muted">'+(i+1)+'</td><td class="name">'+esc(r.camp)+'</td><td>'+esc(r.client)+'</td><td><span class="dot" style="background:'+PL[r.p][1]+'"></span>'+PL[r.p][0]+'</td><td class="muted">'+esc(r.accName)+'</td><td>'+M(r.s)+'</td><td>'+N(r.l)+'</td><td>'+cpl(r.s,r.l)+'</td><td>'+N(r.i)+'</td><td>'+N(r.c)+'</td><td><span class="num">'+(r.i?nf2.format(r.c/r.i*100):"0")+'%</span></td></tr>').join("")||'<tr><td colspan="11" class="note">لا يوجد صرف.</td></tr>'}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-c]");if(b){flt=b.dataset.c;drawCamps()}});
+drawCamps();
+})();
+</script>
