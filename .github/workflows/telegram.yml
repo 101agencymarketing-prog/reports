@@ -62,7 +62,8 @@ jobs:
             TEXT="✅ تم تحديث تقارير العملاء — ${NOW}"$'\n'"اتحدّث: ${CHANGED}${LINKS}"
             SEND=yes
           elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            TEXT="👋 رسالة تجربة من بوت تقارير 101 — ${NOW}"$'\n'"هيوصلك هنا إشعار مع كل تحديث للتقارير، وتنبيه لو التحديث اتأخر."
+            LAST=$(git log -1 --format=%ct -- '*/index.html'); LT=$(TZ=Asia/Riyadh date -d "@$LAST" +%H:%M); AGE=$(( ( $(date +%s) - LAST ) / 60 ))
+            TEXT="📊 حالة تقارير العملاء — ${NOW}"$'\n'"آخر تحديث: ${LT} (من ${AGE} دقيقة)${LINKS}"
             SEND=yes
           else
             LAST=$(git log -1 --format=%ct -- '*/index.html')
