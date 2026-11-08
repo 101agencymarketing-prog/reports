@@ -1,0 +1,82 @@
+name: Telegram notifications
+
+on:
+  push:
+    branches: [main]
+    paths: ['*/index.html']
+  schedule:
+    - cron: '20,50 * * * *'
+  workflow_dispatch:
+    inputs:
+      test:
+        description: 'Send a test message'
+        default: 'yes'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: telegram
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 50
+
+      - name: Resolve chat id
+        id: chat
+        env:
+          TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then echo "TELEGRAM_TOKEN secret missing"; exit 1; fi
+          F=.github/telegram_chat_id
+          if [ -s "$F" ]; then
+            echo "id=$(cat $F)" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          ID=$(curl -s "https://api.telegram.org/bot${TOKEN}/getUpdates" | jq -r '[.result[] | (.message // .my_chat_member // .edited_message) | .chat.id] | map(select(. != null)) | last // empty')
+          if [ -z "$ID" ]; then echo "No chat found: send any message to the bot first"; exit 1; fi
+          echo "$ID" > "$F"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$F" && git commit -m "Save Telegram chat id [skip ci]" && git push || true
+          echo "id=$ID" >> "$GITHUB_OUTPUT"
+
+      - name: Build message
+        id: msg
+        run: |
+          NOW=$(TZ=Asia/Riyadh date +%H:%M)
+          LINKS=$'\n\nالنموذجية: https://101agencymarketing-prog.github.io/reports/namouthajiya-k7x92/\nمكيون: https://101agencymarketing-prog.github.io/reports/makkiyoon-m4v73/\nمساب: https://101agencymarketing-prog.github.io/reports/masap-r8q51/'
+          SEND=no
+          if [ "${{ github.event_name }}" = "push" ]; then
+            CHANGED=$(git diff --name-only HEAD~1 HEAD -- '*/index.html' | cut -d/ -f1 | sed -e 's/namouthajiya-k7x92/النموذجية/' -e 's/makkiyoon-m4v73/مكيون/' -e 's/masap-r8q51/مساب/' | paste -sd '، ' -)
+            TEXT="✅ تم تحديث تقارير العملاء — ${NOW}"$'\n'"اتحدّث: ${CHANGED}${LINKS}"
+            SEND=yes
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TEXT="👋 رسالة تجربة من بوت تقارير 101 — ${NOW}"$'\n'"هيوصلك هنا إشعار مع كل تحديث للتقارير، وتنبيه لو التحديث اتأخر."
+            SEND=yes
+          else
+            LAST=$(git log -1 --format=%ct -- '*/index.html')
+            AGE=$(( ( $(date +%s) - LAST ) / 60 ))
+            if [ "$AGE" -ge 90 ] && [ "$AGE" -lt 120 ]; then
+              LT=$(TZ=Asia/Riyadh date -d "@$LAST" +%H:%M)
+              TEXT="⚠️ تقارير العملاء ماتحدّثتش من ${AGE} دقيقة (آخر تحديث ${LT})."$'\n'"راجع مهمة التحديث في Claude."
+              SEND=yes
+            fi
+          fi
+          echo "send=$SEND" >> "$GITHUB_OUTPUT"
+          { echo 'text<<EOT'; echo "${TEXT:-}"; echo 'EOT'; } >> "$GITHUB_OUTPUT"
+
+      - name: Send
+        if: steps.msg.outputs.send == 'yes'
+        env:
+          TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          CHAT: ${{ steps.chat.outputs.id }}
+          TEXT: ${{ steps.msg.outputs.text }}
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${CHAT}" --data-urlencode "text=${TEXT}" \
+            -d disable_web_page_preview=true | jq -e '.ok' > /dev/null
