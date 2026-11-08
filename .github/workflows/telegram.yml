@@ -32,7 +32,9 @@ jobs:
         env:
           TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
         run: |
+          TOKEN=$(printf '%s' "$TOKEN" | tr -d '[:space:]')
           if [ -z "$TOKEN" ]; then echo "TELEGRAM_TOKEN secret missing"; exit 1; fi
+          echo "token length=${#TOKEN} has_colon=$(case "$TOKEN" in *:*) echo yes;; *) echo no;; esac)"
           F=.github/telegram_chat_id
           if [ -s "$F" ]; then
             echo "id=$(cat $F)" >> "$GITHUB_OUTPUT"; exit 0
@@ -81,6 +83,7 @@ jobs:
           CHAT: ${{ steps.chat.outputs.id }}
           TEXT: ${{ steps.msg.outputs.text }}
         run: |
+          TOKEN=$(printf '%s' "$TOKEN" | tr -d '[:space:]')
           curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage" \
             --data-urlencode "chat_id=${CHAT}" --data-urlencode "text=${TEXT}" \
             -d disable_web_page_preview=true | jq -e '.ok' > /dev/null
