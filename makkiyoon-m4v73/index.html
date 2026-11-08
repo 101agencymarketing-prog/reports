@@ -253,6 +253,10 @@ details summary h2::before{content:"";position:absolute;inset-inline-start:0;top
     <section class="panel"><div class="panel-h"><h2>ترتيب الحملات</h2><span class="stamp">الأقل تكلفة للعميل المحتمل</span></div><ol class="rank" id="rank"></ol></section>
   </div>
   <section class="panel"><div class="panel-h"><h2>تفاصيل كل منصة</h2><span class="stamp">مؤشرات الأداء الكاملة للفترة</span></div><div class="pcards" id="pcards"></div></section>
+  <section class="panel" id="creSec" hidden><div class="panel-h"><h2>أداء التصاميم الإعلانية</h2><div class="chips" id="creWin" role="group" aria-label="فترة التصاميم"></div></div>
+    <p class="note" style="margin:0 0 10px">كل تصميم محسوب مرة واحدة حتى لو استُخدم في أكثر من إعلان أو حملة. «فعّال» = حقق 5 تسجيلات أو أكثر بتكلفة أقل من متوسط الحملة.</p>
+    <ul class="cre-sum" id="creSum"></ul><div class="chips" id="creFilter" role="group" aria-label="تصنيف التصاميم" style="margin-bottom:12px;width:fit-content"></div><div class="cre-grid" id="creGrid"></div>
+  </section>
   <section class="panel"><div class="panel-h"><h2>تفاصيل الحملات</h2><span class="stamp" id="plabel"></span></div>
     <div class="tbl-wrap"><table><thead><tr><th>الحملة</th><th>المنصة</th><th>الحالة</th><th>الصرف</th><th>نماذج تسجيل</th><th>محادثات</th><th>إجمالي العملاء</th><th>تكلفة العميل</th><th>الظهور</th><th>النقرات</th><th>تكلفة النقرة</th><th>نسبة النقر</th><th>نسبة التحويل</th></tr></thead><tbody id="rows"></tbody><tfoot id="foot"></tfoot></table></div>
   </section>
@@ -264,6 +268,30 @@ details summary h2::before{content:"";position:absolute;inset-inline-start:0;top
 <footer><div class="wrap">101 Agency · m.gamal@101agency.ae</div></footer>
 </div>
 
+<style>
+/* creatives section */
+.cre-sum{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-direction:column;gap:8px}
+.cre-sum li{padding:10px 12px;border-radius:10px;background:rgba(44,194,187,.05);border:1px solid var(--line);font-size:13.5px;line-height:1.75}
+.cre-sum li b{color:var(--gold-hi);font-weight:600}
+.cre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.cre{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#121419;display:flex;flex-direction:column;min-width:0}
+.cre .th{aspect-ratio:4/5;background:var(--sunk);display:grid;place-items:center;overflow:hidden;position:relative}
+.cre .th img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cre .th .ph{font-family:var(--f-display);font-size:26px;color:var(--muted)}
+.cre .rk{position:absolute;top:8px;inset-inline-start:8px;background:rgba(13,14,17,.85);border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-size:12px;font-weight:600;z-index:1}
+.cre .st{position:absolute;top:8px;inset-inline-end:8px;border-radius:999px;padding:2px 9px;font-size:11.5px;font-weight:600;z-index:1}
+.st.win{background:var(--good-bg);color:var(--good)}.st.prom{background:rgba(44,194,187,.18);color:var(--gold-hi)}.st.test{background:var(--sunk);color:var(--muted)}.st.weak{background:var(--bad-bg);color:var(--bad)}
+.cre .bd{padding:10px 12px;display:flex;flex-direction:column;gap:6px;flex:1}
+.cre .nm{font-weight:600;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cre .mt{font-size:11.5px;color:var(--muted)}
+.cre .big{display:flex;justify-content:space-between;align-items:baseline;gap:6px}
+.cre .big b{font-family:var(--f-display);font-size:22px;color:var(--gold-hi)}
+.cre .bar{height:5px;border-radius:3px;background:var(--sunk);overflow:hidden}.cre .bar span{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-hi))}
+.cre dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px 8px;margin:0;font-size:12px}
+.cre dt{color:var(--muted);font-size:11px}.cre dd{margin:0;font-weight:600}
+.cre .rec{margin-top:auto;font-size:12.5px;line-height:1.6;padding:8px 10px;border-radius:8px;background:var(--sunk)}
+.cre .rec.fat{border-inline-start:3px solid var(--warn)}
+</style>
 <!--DATA-START-->
 <script type="application/json" id="data">{"updated":"2026-11-08T21:08:42+03:00","client":"مكيون – ميان الفرسان","start":"2026-10-20","end":"2026-11-08","fx":{"SAR":1,"USD":3.75,"AED":1.021},"platforms":["meta","snap","tt"],"campaigns":[{"p":"meta","cur":"SAR","name":"TEST OCT","status":"PAUSED","days":{"2026-10-23":[234.35,2841,1929,70,70,4,0],"2026-10-24":[224.23,2695,1794,72,72,5,0],"2026-10-25":[221.69,2227,1652,65,65,5,0],"2026-10-26":[219.31,1649,1337,51,51,2,0],"2026-10-27":[25.35,177,159,7,7,1,0]}},{"p":"meta","cur":"SAR","name":"TEST OCT – Copy","status":"PAUSED","days":{"2026-10-25":[181.77,1025,828,22,22,0,0]}},{"p":"meta","cur":"SAR","name":"TEST OCT – new","status":"PAUSED","days":{"2026-10-26":[471.88,10254,7090,213,213,10,1],"2026-10-27":[111.26,1866,1643,21,21,1,0]}},{"p":"meta","cur":"SAR","name":"mayan new","status":"PAUSED","days":{"2026-10-27":[470.91,5804,3598,96,96,1,6],"2026-10-28":[188.47,2894,2248,48,48,0,5]}},{"p":"meta","cur":"SAR","name":"mayan new – 28","status":"PAUSED","days":{"2026-10-28":[464.51,4134,2716,71,71,0,4]}},{"p":"meta","cur":"SAR","name":"mayan new – 29 oct","status":"PAUSED","days":{"2026-10-29":[573.99,5495,4243,65,65,1,0],"2026-10-30":[311.56,3256,2627,35,35,5,0],"2026-10-31":[47.82,541,521,8,8,1,0]}},{"p":"meta","cur":"SAR","name":"mayan new – 29 oct  - cbo","status":"PAUSED","days":{"2026-10-29":[749.32,8570,5976,126,126,12,0],"2026-10-30":[848.79,9166,6344,98,98,13,0],"2026-10-31":[885.47,9753,6733,100,100,8,0],"2026-11-01":[158,1506,1347,18,18,2,0]}},{"p":"meta","cur":"AED","name":"mayan new – 29 oct  - cbo","status":"PAUSED","days":{"2026-10-30":[247.12,2740,2205,40,40,3,1],"2026-10-31":[273.13,4122,3534,57,57,1,0],"2026-11-01":[67.17,1131,1074,13,13,0,0]}},{"p":"meta","cur":"AED","name":"mayan new – nov","status":"PAUSED","days":{"2026-11-01":[624.59,10884,7315,181,181,6,0],"2026-11-02":[59.85,1138,1033,14,14,0,0]}},{"p":"meta","cur":"AED","name":"mayan new – nov ,,","status":"PAUSED","days":{"2026-11-02":[636.69,9506,6415,146,146,8,0],"2026-11-03":[642.03,10741,7656,167,167,7,1],"2026-11-04":[433.58,10534,8273,151,151,5,0],"2026-11-05":[587.1,12522,10072,201,201,8,0],"2026-11-06":[76.06,1924,1796,23,23,0,0]}},{"p":"meta","cur":"AED","name":"mayan new – nov ,, – Copy","status":"ACTIVE","days":{"2026-11-04":[769.44,11466,9013,176,176,7,0],"2026-11-05":[714.53,8237,6115,112,112,11,0],"2026-11-06":[575.83,5976,4289,80,80,7,0],"2026-11-07":[343.63,3508,2737,59,59,6,0],"2026-11-08":[374.72,7784,5417,95,95,1,0]}},{"p":"snap","cur":"USD","name":"mayan","status":"PAUSED","days":{"2026-10-23":[130,10422,0,138,138,0,0],"2026-10-24":[35.27,2307,0,52,52,0,0]}},{"p":"snap","cur":"USD","name":"new  mayan","status":"PAUSED","days":{"2026-10-24":[80,4319,0,84,84,1,0],"2026-10-25":[62.96,4827,0,101,101,2,0]}},{"p":"snap","cur":"USD","name":"mayan 25 oct","status":"PAUSED","days":{"2026-10-25":[39.17,2780,0,61,61,0,0]}},{"p":"snap","cur":"USD","name":"mayan 27 oct","status":"PAUSED","days":{"2026-10-27":[160,9625,0,205,205,1,0],"2026-10-28":[26.69,1713,0,36,36,3,0],"2026-10-29":[97.24,1919,0,26,26,8,0],"2026-10-30":[9.24,295,0,1,1,0,0]}},{"p":"snap","cur":"USD","name":"new mayan 29 oct","status":"ACTIVE","days":{"2026-10-29":[200,5436,0,89,89,25,0],"2026-10-30":[109.58,5288,0,74,74,15,0],"2026-10-31":[100,4776,0,67,67,12,0],"2026-11-01":[150,9873,0,160,160,19,0],"2026-11-02":[150,12661,0,181,181,13,0],"2026-11-03":[150,11208,0,134,134,11,0],"2026-11-04":[150,8833,0,106,106,4,0],"2026-11-05":[150,6917,0,90,90,7,0],"2026-11-06":[150,5969,0,85,85,9,0],"2026-11-07":[21.73,1194,0,21,21,2,0],"2026-11-08":[128.0682,5656,0,111,111,12,0]}},{"p":"snap","cur":"USD","name":"new mayan 30 oct","status":"ACTIVE","days":{"2026-10-30":[350,13253,0,184,184,29,0],"2026-10-31":[350,13804,0,221,221,33,0],"2026-11-01":[272.31,16014,0,229,229,22,0],"2026-11-02":[250,18612,0,233,233,16,0],"2026-11-03":[250,16343,0,215,215,14,0],"2026-11-04":[34.8,1860,0,22,22,1,0],"2026-11-05":[250,12577,0,156,156,7,0],"2026-11-06":[250,9821,0,162,162,23,0],"2026-11-07":[34.21,2055,0,22,22,0,0],"2026-11-08":[191.2522,9077,0,176,176,16,0]}},{"p":"snap","cur":"USD","name":"new mayan nov","status":"PAUSED","days":{"2026-11-04":[349.88,19817,0,242,242,12,0],"2026-11-05":[265.41,12898,0,150,150,14,0],"2026-11-06":[57.09,1609,0,19,19,1,0]}},{"p":"tt","cur":"SAR","name":"Copy 1 of MAYAN","status":"CAMPAIGN_STATUS_DISABLE","days":{"2026-11-03":[380,26369,25160,188,188,0,0],"2026-11-04":[998.46,91046,65672,1941,1941,12,0],"2026-11-05":[184.11,45988,34527,79,79,1,0]}},{"p":"tt","cur":"SAR","name":"MAYAN  nov","status":"CAMPAIGN_STATUS_DISABLE","days":{"2026-11-04":[903.37,191281,109830,1440,1440,16,0],"2026-11-05":[995.25,88457,60280,566,566,24,0],"2026-11-06":[900.78,49663,30825,551,551,25,0],"2026-11-07":[391.05,19275,12298,322,322,6,0],"2026-11-08":[407.69,8333,5289,280,280,10,0]}},{"p":"tt","cur":"SAR","name":"MAYAN  nov 2","status":"CAMPAIGN_STATUS_DISABLE","days":{"2026-11-05":[603.23,116100,69198,303,303,15,0],"2026-11-06":[611.9,18697,14469,380,380,15,0],"2026-11-07":[378.97,18286,11853,291,291,13,0],"2026-11-08":[270.43,4368,2538,215,215,6,0]}}]}</script>
 <!--DATA-END-->
@@ -457,5 +485,41 @@ if(!RM)document.documentElement.classList.add("anim");
 render(true);
 })();
 </script>
+<script>
+(function(){
+const D=JSON.parse(document.getElementById("data").textContent),C=D.creatives||[];if(!C.length)return;
+const sec=document.getElementById("creSec");sec.hidden=false;
+const PLN={meta:["Meta","var(--meta)"],snap:["Snapchat","var(--snap)"],tt:["TikTok","var(--tt)"]};
+const f0=new Intl.NumberFormat("en-US",{maximumFractionDigits:0}),f2=new Intl.NumberFormat("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const M=v=>isFinite(v)?'<span class="num">'+(v>=1000?f0.format(v):f2.format(v))+"</span> ر.س":"—";
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ST={win:"فعّال",prom:"واعد",test:"قيد الاختبار",weak:"أداء أضعف"};
+let win="all",flt="all";
+function rows(){return C.map(g=>{const o=win==="7"?{s:g.s7,l:g.l7,i:g.i7,c:g.c7}:{s:g.s,l:g.l,i:g.i,c:g.c};return Object.assign({},g,o,{cpl:o.l?o.s/o.l:NaN,cpl7:g.l7?g.s7/g.l7:NaN})}).filter(g=>g.s>0)}
+function draw(){
+ const R=rows(),S=R.reduce((a,g)=>a+g.s,0),L=R.reduce((a,g)=>a+g.l,0),avg=L?S/L:NaN;
+ document.getElementById("creWin").innerHTML=[["all","كل فترة التقرير"],["7","آخر 7 أيام"]].map(([k,l])=>'<button type="button" data-cw="'+k+'" aria-pressed="'+(k===win)+'">'+l+"</button>").join("");
+ R.forEach(g=>{g.st=g.l>=5&&g.cpl<=avg?"win":g.l>=1&&g.cpl<=avg*1.25?"prom":((g.l===0&&g.s>=avg*2)||(g.l>=1&&g.cpl>avg*1.5&&g.s>=avg*2))?"weak":"test";
+  g.fat=win==="all"&&g.st==="win"&&g.s7>=avg&&(g.l7===0||g.cpl7>g.cpl*1.4)});
+ const wins=R.filter(g=>g.st==="win").sort((a,b)=>b.l-a.l||a.cpl-b.cpl),best=wins[0]||R.filter(g=>g.l>0).sort((a,b)=>a.cpl-b.cpl)[0];
+ R.forEach(g=>{g.rec=g.st==="win"?(g.fat?"حقق نتائج قوية لكن أداءه تراجع في الأيام الأخيرة؛ نوصي بتجهيز نسخة متجددة منه مع الحفاظ على ميزانيته.":"نوصي بزيادة الميزانية المخصصة لهذا التصميم تدريجيًا."):
+  g.st==="prom"?"نتائجه مبشّرة؛ نوصي بمنحه ميزانية إضافية لتأكيد أدائه.":g.st==="weak"?"نوصي بإيقافه وتحويل ميزانيته"+(best&&best!==g?" إلى «"+esc(best.name)+"» على "+PLN[best.p][0]:" إلى التصاميم الفعّالة")+".":"يحتاج إلى مزيد من البيانات قبل الحكم على أدائه."});
+ const sum=[],byL=R.slice().sort((a,b)=>b.l-a.l);
+ if(best)sum.push("أفضل تصميم أداءً: <b>«"+esc(best.name)+"»</b> على "+PLN[best.p][0]+"، حقق <b>"+f0.format(best.l)+" تسجيلًا</b> ("+f0.format(L?best.l/L*100:0)+"% من الإجمالي) بتكلفة <b>"+M(best.cpl)+"</b> للتسجيل مقابل متوسط "+M(avg)+".");
+ if(R.length>=4&&L){const t3=byL.slice(0,3).reduce((a,g)=>a+g.l,0);sum.push("أعلى 3 تصاميم حققت <b>"+f0.format(t3/L*100)+"%</b> من التسجيلات، و<b>"+wins.length+"</b> تصاميم فعّالة من أصل "+R.length+" تصميمًا.")}
+ const weak=R.filter(g=>g.st==="weak"),ws=weak.reduce((a,g)=>a+g.s,0);
+ if(weak.length&&S)sum.push("صُرف <b>"+M(ws)+"</b> ("+f0.format(ws/S*100)+"% من الميزانية) على "+weak.length+" تصاميم أداؤها أضعف؛ نوصي بإعادة توزيع هذا المبلغ على التصاميم الفعّالة.");
+ const fat=R.filter(g=>g.fat);if(fat.length)sum.push("رُصد تراجع حديث في أداء "+fat.length+" من التصاميم الفعّالة ("+fat.slice(0,3).map(g=>"«"+esc(g.name)+"»").join("، ")+")؛ نوصي بتجهيز نسخ متجددة منها.");
+ const plats=[...new Set(R.map(g=>g.p))];if(best&&plats.length>1){const oth=plats.filter(p=>p!==best.p).filter(p=>{const x=R.filter(g=>g.p===p),s=x.reduce((a,g)=>a+g.s,0),l=x.reduce((a,g)=>a+g.l,0);return s>0&&(!l||s/l>avg)});
+  if(oth.length)sum.push("نقترح تطبيق أسلوب التصميم الأنجح على "+PLN[best.p][0]+" في حملات "+oth.map(p=>PLN[p][0]).join(" و")+" لرفع كفاءتها.")}
+ document.getElementById("creSum").innerHTML=sum.map(s=>"<li>"+s+"</li>").join("");
+ const cnt=k=>R.filter(g=>k==="all"||g.st===k).length;
+ document.getElementById("creFilter").innerHTML=[["all","الكل"],["win",ST.win],["prom",ST.prom],["test",ST.test],["weak",ST.weak]].filter(([k])=>k==="all"||cnt(k)).map(([k,l])=>'<button type="button" data-cf="'+k+'" aria-pressed="'+(k===flt)+'">'+l+" ("+cnt(k)+")</button>").join("");
+ const list=byL.filter(g=>flt==="all"||g.st===flt).slice(0,24),rank=new Map(byL.map((g,i)=>[g,i+1]));
+ document.getElementById("creGrid").innerHTML=list.map(g=>'<article class="cre"><div class="th"><span class="ph">'+PLN[g.p][0]+"</span>"+(g.thumb?'<img loading="lazy" referrerpolicy="no-referrer" alt="" src="'+esc(g.thumb)+'" onerror="this.remove()">':"")+'<span class="rk">#'+rank.get(g)+'</span><span class="st '+g.st+'">'+ST[g.st]+'</span></div><div class="bd"><div class="nm" title="'+esc(g.name)+'">'+esc(g.name)+'</div><div class="mt"><span class="dot" style="background:'+PLN[g.p][1]+'"></span> '+PLN[g.p][0]+" · "+g.camps+" حملة · "+g.ads+' إعلان</div><div class="big"><span><b>'+f0.format(g.l)+'</b> تسجيل</span><span class="mt">'+(L?f0.format(g.l/L*100):0)+'% من التسجيلات</span></div><div class="bar"><span style="width:'+(L?(g.l/L*100).toFixed(1):0)+'%"></span></div><dl><div><dt>تكلفة التسجيل</dt><dd>'+M(g.cpl)+"</dd></div><div><dt>الصرف</dt><dd>"+M(g.s)+'</dd></div><div><dt>نسبة النقر</dt><dd><span class="num">'+(g.i?f2.format(g.c/g.i*100):"0")+'%</span></dd></div></dl><div class="rec'+(g.fat?" fat":"")+'">'+g.rec+"</div></div></article>").join("")||'<p class="note">لا توجد تصاميم في هذا التصنيف.</p>'}
+document.addEventListener("click",e=>{const w=e.target.closest("[data-cw]");if(w){win=w.dataset.cw;flt="all";draw();return}const f=e.target.closest("[data-cf]");if(f){flt=f.dataset.cf;draw()}});
+draw()})();
+</script>
+
 
 </body></html>
