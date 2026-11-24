@@ -196,7 +196,9 @@ function pdf(){if(busy)return;
  .then(function(){return lib(function(){return window.jspdf},"../assets/jspdf.umd.min.js","https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js")})
  .then(function(){
   var wrap=document.querySelector("main .wrap");if(xp)xp.style.display="block";
-  var db=$("#dailyBox"),wasOpen=db&&db.open;if(db)db.open=true;
+  var hid=[].slice.call(document.querySelectorAll("#creGrid .cre")).slice(8),nt=null;hid.forEach(function(c){c.style.display="none"});
+  if(hid.length){nt=document.createElement("p");nt.className="note";nt.textContent="يعرض هذا الملف أفضل 8 تصاميم؛ القائمة الكاملة متاحة في التقرير المباشر.";$("#creGrid").parentNode.appendChild(nt)}
+  var undo=function(){if(xp)xp.style.display="";hid.forEach(function(c){c.style.display=""});if(nt)nt.remove()};pdf.undo=undo;
   var blocks=[].filter.call(wrap.children,function(el){return!el.hidden&&!el.classList.contains("toolbar")&&el.id!=="xrange"&&el.offsetHeight>0});
   var W=Math.round(wrap.clientWidth),sc=W>900?1.5:2,bg=getComputedStyle(document.body).backgroundColor,mg=16,gap=12,PW=W+mg*2,PH=Math.round(PW*1.414),av=PH-mg*2;
   var rgb=(bg.match(/\d+/g)||[13,14,17]).map(Number);
@@ -212,12 +214,12 @@ function pdf(){if(busy)return;
      while(off<h-1){var room=PH-mg-y,lim=off+room,cut=h<=lim?h:0;if(!cut){for(var j=0;j<cs.length;j++)if(cs[j]<=lim&&cs[j]>off+room*.35)cut=cs[j];if(!cut)cut=lim}
       put(c,off,cut-off);off=cut;if(off<h-1)page()}}
     return next()})};
-  return next().then(function(){if(xp)xp.style.display="";if(db)db.open=wasOpen;
+  return next().then(function(){undo();
    var nm="تقرير-"+String(D.client||"الحملات").replace(/[\\/:*?"<>|]/g,"").replace(/\s+/g,"-")+"-"+S.a+"_"+S.b+".pdf",blob=doc.output("blob");
    if(test){var o=document.createElement("div");o.style.cssText="position:fixed;inset:0;z-index:99;background:#333;overflow:auto;padding:10px;direction:ltr";o.innerHTML="<p style='color:#fff'>PDF test: "+pages+" pages, "+Math.round(blob.size/1024)+" KB, "+shots.length+" blocks</p>";shots.forEach(function(c){c.style.cssText="width:48%;margin:1%;vertical-align:top";o.appendChild(c)});document.body.appendChild(o);return}
    var u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download=nm;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},8000);
    toast("تم تجهيز ملف PDF ("+pages+" صفحة) وبدأ التحميل.")})})
- .catch(function(e){if(xp)xp.style.display="";printPdf()}).then(function(){busy=false})}
+ .catch(function(e){if(pdf.undo)pdf.undo();else if(xp)xp.style.display="";printPdf()}).then(function(){busy=false})}
 
 })();
 </script>
@@ -235,5 +237,6 @@ sub(HOOK_OLD, HOOK_NEW, "render hook")
 sub(INIT_OLD, INIT_NEW, "init hook")
 sub(CRE_OLD, CRE_NEW, "creative card")
 sub("<!--DATA-END-->", "<!--DATA-END-->\n" + CSS + JS, "data end")
+t = t.replace('<link rel="stylesheet" href="https://fonts.googleapis.com/', '<link rel="stylesheet" crossorigin="anonymous" href="https://fonts.googleapis.com/')
 open(out, "w", encoding="utf8").write(t)
 print("patched", out)
