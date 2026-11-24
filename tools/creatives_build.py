@@ -4,7 +4,10 @@ usage: creatives_build.py <report_data.json> <ads_full.json> <ads_7d.json> <out_
 ads files: {"meta":[rows],"snap":[rows],"tt":[rows]} as returned by Windsor (ad level, no date field).
 Only ads whose (platform, account, trimmed campaign) exist in the report's campaigns are kept, so each
 report's own inclusion rules apply automatically. A creative = same image/video (Snap media_id, TikTok
-video_id/image, Meta thumbnail file), merged across ads and campaigns."""
+video_id/image, Meta thumbnail file), merged across ads and campaigns.
+Optional ad fields add extras to each creative: Meta "reach" -> "fq" (impressions / reach), Meta "actions_video_view" +
+"video_thruplay_watched_actions_video_view" and Snapchat "video_views" + "view_completion" -> "vv" / "vc".
+Rows without those fields work as before."""
 import json, sys, re
 n = lambda x: float(x or 0)
 def key(p, r):
@@ -28,10 +31,13 @@ def agg(path):
             if n(r.get("spend")) <= 0 or (p, (r.get("campaign") or "").strip()) not in camps: continue
             cur = r.get("account_currency") or r.get("currency") or "SAR"
             k = p + "|" + key(p, r)
-            g = out.setdefault(k, {"p":p,"s":0,"l":0,"i":0,"c":0,"ads":0,"camps":set(),"names":{},"thumb":None})
+            g = out.setdefault(k, {"p":p,"s":0,"l":0,"i":0,"c":0,"ads":0,"camps":set(),"names":{},"thumb":None,"reach":0,"ri":0,"vv":0,"vc":0})
             s = n(r.get("spend")) * fx.get(cur, 1)
             g["s"] += s; g["l"] += leads(p, r); g["i"] += n(r.get("impressions"))
             g["c"] += n(r.get("swipes")) if p == "snap" else n(r.get("clicks")); g["ads"] += 1
+            if p == "meta" and n(r.get("reach")) > 0: g["reach"] += n(r.get("reach")); g["ri"] += n(r.get("impressions"))
+            g["vv"] += n(r.get("actions_video_view") if p == "meta" else r.get("video_views") if p == "snap" else 0)
+            g["vc"] += n(r.get("video_thruplay_watched_actions_video_view") if p == "meta" else r.get("view_completion") if p == "snap" else 0)
             g["camps"].add((r.get("campaign") or "").strip())
             nm = str(r.get("ad_name") or "—"); g["names"][nm] = g["names"].get(nm, 0) + s
             th = r.get("thumbnail_url") or r.get("image_url")
@@ -44,6 +50,8 @@ for k, g in full.items():
     res.append({"p":g["p"],"name":max(g["names"].items(), key=lambda kv:kv[1])[0],"thumb":g["thumb"],
         "s":round(g["s"],2),"l":int(g["l"]),"i":int(g["i"]),"c":int(g["c"]),"ads":g["ads"],"camps":len(g["camps"]),
         "s7":round(r7.get("s",0),2),"l7":int(r7.get("l",0)),"i7":int(r7.get("i",0)),"c7":int(r7.get("c",0))})
+    if g["reach"] > 0: res[-1]["fq"] = round(g["ri"] / g["reach"], 2)
+    if g["vv"] > 0: res[-1]["vv"] = int(g["vv"]); res[-1]["vc"] = int(g["vc"])
 res.sort(key=lambda x:(-x["l"], x["s"]))
 rep["creatives"] = res
 json.dump(rep, open(sys.argv[4], "w", encoding="utf8"), ensure_ascii=False, separators=(",",":"))
