@@ -162,7 +162,7 @@ function notes(){var N=(M.notes||[]).filter(function(n){return n&&n.d&&n.t&&S.DA
  var ul=document.createElement("ul");ul.className="xnotes";ul.id="xnotes";ul.setAttribute("dir","rtl");
  ul.innerHTML=N.slice(-6).map(function(n){return"<li><time>▼ "+dshort(n.d)+"</time><span>"+esc(n.t)+"</span></li>"}).join("");el.parentNode.appendChild(ul)}
 
-function toast(t){var o=document.querySelector(".xtoast");if(o)o.remove();var d=document.createElement("div");d.className="xtoast";d.setAttribute("role","status");d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},6000)}
+function toast(t,ms){var o=document.querySelector(".xtoast");if(o)o.remove();var d=document.createElement("div");d.className="xtoast";d.setAttribute("role","status");d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},ms||6000)}
 function csv(){var s=S,L=[],q=function(v){return'"'+String(v==null?"":v).replace(/"/g,'""')+'"'},n=function(v){return isFinite(v)?Math.round(v*100)/100:""};
  var row=function(a){L.push(a.map(q).join(","))},act=function(x){return/ACTIVE|ENABLE/.test(x)&&!/DISABLE/.test(x)?"نشطة":"متوقفة"};
  row(["تقرير أداء الحملات الإعلانية",D.client||""]);row(["الفترة",s.a,s.b]);row(["المنصة",s.plat==="all"?"كل المنصات":s.PL[s.plat].l]);row(["إعداد","101 Agency"]);row([]);
@@ -191,7 +191,7 @@ function cuts(el){var t0=el.getBoundingClientRect().top,o=[];[].forEach.call(el.
 function pdf(){if(busy)return;
  if(/claudeusercontent\.com$/.test(location.hostname)){toast("تحميل PDF يعمل من رابط التقرير المباشر في المتصفح، وليس من داخل هذه النافذة.");return}
  busy=true;var test=location.hash==="#xpdftest",xp=$("#xprint"),stick=function(m){toast(m);var d=document.querySelector(".xtoast");return d};
- toast("جارٍ تجهيز ملف PDF للفترة المختارة… قد يستغرق بضع ثوانٍ.");
+ toast("جارٍ تجهيز ملف PDF للفترة المختارة… يستغرق نحو نصف دقيقة، يُرجى الانتظار.",90000);
  lib(function(){return window.modernScreenshot},"../assets/modern-screenshot.js","https://cdn.jsdelivr.net/npm/modern-screenshot@4.7.0/dist/index.js")
  .then(function(){return lib(function(){return window.jspdf},"../assets/jspdf.umd.min.js","https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js")})
  .then(function(){
