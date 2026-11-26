@@ -8,7 +8,7 @@ FX = {"SAR":1,"USD":3.75,"AED":1.021,"QAR":1.03,"EGP":0.0667,"GBP":5.0}
 CLIENTS = {
  "meta:1620638329403862":"مساب العقارية","snap:35861d53-7066-4688-bd31-dce0cebb2d5b":"مساب العقارية","tt:7682750301601824788":"مساب العقارية",
  "meta:852323024077178":"النموذجية الأولى","snap:2a051572-c841-4f03-b473-56ad204c79a8":"النموذجية الأولى","tt:7389264380287991824":"النموذجية الأولى","tt:7696162242630467636":"النموذجية الأولى",
- "meta:943643444739467":"مكيون","meta:1597810178042256":"مكيون","tt:7703457655599300609":"مكيون","meta:1143955064371755":"مكيون","meta:1452337152504913":"مكيون",
+ "meta:943643444739467":"مكيون","meta:1597810178042256":"Makkiyoon26","tt:7703457655599300609":"مكيون","meta:1143955064371755":"مكيون","meta:1452337152504913":"مكيون",
  "meta:2897945980567876":"هدف","snap:a497c584-0f95-4b36-9dcd-7a8529f1f95b":"هدف",
  "snap:416d4e33-c33f-4da3-9bbb-262ba4103752":"زاوية المفتاح",
  "meta:2270492903138751":"OIA Properties","meta:1036295864285013":"OIA Properties",
@@ -30,7 +30,8 @@ def norm(p, r):
         leads, clicks = n(r.get("onsite_form")) + n(r.get("form")), n(r.get("clicks"))
     acc = str(r.get("account_id", ""))
     camp = (r.get("campaign") or "—").strip()
-    client = "مكيون" if "mayan" in camp.lower() else CLIENTS.get(p + ":" + acc, r.get("account_name") or acc)
+    key = p + ":" + acc
+    client = "Makkiyoon26" if key == "meta:1597810178042256" else "مكيون" if "mayan" in camp.lower() else CLIENTS.get(key, r.get("account_name") or acc)
     return {"p":p,"acc":acc,"accName":(r.get("account_name") or acc).strip(),"client":client,"cur":cur,"camp":camp,
             "status":r.get("campaign_status") or "","s":round(n(r.get("spend"))*FX.get(cur,1),2),
             "i":int(n(r.get("impressions"))),"c":int(clicks),"l":int(leads)}
